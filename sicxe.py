@@ -57,12 +57,12 @@ def literalToHex(literal):
         res += hex( ord( c ) )
 
     return res
-    
+
 def convertLiteral(literal, pc):
     h = literalToHex(literal[2:-1]).replace('0x', '')
     if not ( literal in lit_tab.values() ):
         lit_tab[literal] = [h, str( len(h)/2 ), hex(pc)]
-    
+
 def convertLiteralX(literal, pc):
     h = literal[2:-1]
     if not ( literal in lit_tab.values() ):
@@ -71,12 +71,12 @@ def convertLiteralX(literal, pc):
 def reserveMem(inst):
     global PC
     mnemonic = getMnemonic(inst).lower()
-    
+
     if mnemonic == 'start':
         prog_start = getOperand(inst)
         sym_tab[prog_start] = inst
         PC = int(prog_start, 16)
-    
+
     elif mnemonic in format1:
         sym_tab[hex(PC)] = inst
         PC += 0x1
@@ -103,7 +103,7 @@ def reserveMem(inst):
         else:
             sym_tab[hex(PC)] = inst
             PC += int(op)
-            
+
     elif mnemonic == "byte":
         op = getOperand(inst)
         if op[0] == 'X':
@@ -130,14 +130,14 @@ def reserveMem(inst):
         else:
             sym_tab[hex(PC)] = inst
             PC += int(op) * 3
-            
+
     elif mnemonic == "=":
         op = getOperand(inst)
         if op[0] == "C":
             convertLiteral(op, PC + 3)
         if op[0] == "X":
             convertLiteralX(op, PC + 3)
-            
+
     elif mnemonic == ".":
         pass
 
@@ -146,7 +146,7 @@ def genFinSymTab():
         inst = sym_tab[key]
         if len(inst) == 3:
             fin_sym_tab[inst[0]] = key
-            
+
 def pass1():
     if len(sys.argv) < 2:
         error("*No input file specified")
@@ -155,7 +155,7 @@ def pass1():
         tokens = tokenizeInstructions(insts)
         for token in tokens:
             reserveMem(token)
-            
+
 pass1()
 genFinSymTab()
 
