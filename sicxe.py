@@ -32,10 +32,8 @@ def readFile(fname):
 
 def tokenizeInstructions(instructions):
     tokens = []
-    i = 0
     for inst in instructions:
         tokens.append( [token for token in inst.split(' ') if token != ''] )
-        i += 1
 
     return tokens
 
@@ -108,7 +106,7 @@ def reserveMem(inst):
         op = getOperand(inst)
         if op[0] == 'X':
             sym_tab[hex(PC)] = inst
-            PC += int(op[2:-1], 16) * len(op[2:-1])
+            PC += int( len(op[2:-1]), 2 )
         elif op[0] == 'C':
             sym_tab[hex(PC)] = inst
             PC += len(op[2:-1])
